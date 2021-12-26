@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using PoniLCU;
 
-namespace LolAltClient.Classes
+namespace KiwiClient.Classes
 {
     public class LCU : BaseVM
     {
@@ -22,6 +23,24 @@ namespace LolAltClient.Classes
             get { return _isQueuePopped; }
             set { _isQueuePopped = value; OnPropertyChanged(); }
         }
+
+        private bool _isAutoJoin;
+
+        public bool IsAutoJoin
+        {
+            get { return _isAutoJoin; }
+            set { _isAutoJoin = value; OnPropertyChanged(); }
+        }
+
+
+        private Brush _connectionColor;
+
+        public Brush ConnectionColor
+        {
+            get { return _connectionColor; }
+            set { _connectionColor = value; }
+        }
+
 
         private ICommand _AcceptCommand;
         public ICommand AcceptCommand
@@ -56,16 +75,33 @@ namespace LolAltClient.Classes
         public LCU()
         {
             IsQueuePopped = false;
-            //LeagueClient.OnWebsocketEvent += LeagueClient_OnWebsocketEvent;
-            //LeagueClient.Subscribe("/lol-matchmaking/v1/ready-check", DecideQueue);
-            LeagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", DecideQueue);
-            LeagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowChanges);
+            IsAutoJoin = false;
+            ConnectionColor = new SolidColorBrush(Colors.Red);
+            if(IsLeagueClientConnected())
+            {
+                SubscribeToClientEvents();
+            }
         }
 
         ~LCU()
         {
-            LeagueClient.Unsubscribe("/lol-matchmaking/v1/ready-check", DecideQueue);
-            LeagueClient.Unsubscribe("/lol-gameflow/v1/gameflow-phase", GameFlowChanges);
+            UnsubscribeFromClientEvents();
+        }
+
+
+        private bool IsLeagueClientConnected()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                if (LeagueClient.IsConnected)
+                {
+                    ConnectionColor = new SolidColorBrush(Colors.LightGreen);
+                    return true;
+                }
+                System.Threading.Thread.Sleep(1000);
+            }
+            MessageBox.Show($"Es konnte keine Verbindung zum League Client hergestellt werden. {Environment.NewLine}Stellen Sie bitte sicher das er läuft bevor Kiwi Client gestartet wird.", "Fehler", MessageBoxButton.OK,MessageBoxImage.Error);
+            return false;
         }
 
         private void DecideQueue(OnWebsocketEventArgs obj)
@@ -73,7 +109,12 @@ namespace LolAltClient.Classes
             if (obj.Type.ToUpper() == "UPDATE" && obj.Path == "/lol-matchmaking/v1/ready-check")
             {
                 IsQueuePopped = true;
-                Activate(null, new EventArgs());
+                if(IsAutoJoin)
+                {
+                    AcceptCommand.Execute(LeagueClient);
+                }
+                else
+                    Activate(null, new EventArgs());
             }
         }
 
@@ -84,6 +125,18 @@ namespace LolAltClient.Classes
                 IsQueuePopped = false;
             }
 
+        }
+
+        private void SubscribeToClientEvents()
+        {
+            LeagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", DecideQueue);
+            LeagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowChanges);
+        }
+
+        private void UnsubscribeFromClientEvents()
+        {
+            LeagueClient.Unsubscribe("/lol-matchmaking/v1/ready-check", DecideQueue);
+            LeagueClient.Unsubscribe("/lol-gameflow/v1/gameflow-phase", GameFlowChanges);
         }
 
     }

@@ -1,4 +1,4 @@
-﻿using LolAltClient.Classes;
+﻿using KiwiClient.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace LolAltClient
+namespace KiwiClient
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml

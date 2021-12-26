@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace LolAltClient.Converter
+namespace KiwiClient.Converter
 {
     /// <summary>
     /// Kovertiert Bool Value in Visibility um. True =  visible, false = Hidden

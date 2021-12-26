@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LolAltClient.Classes
+namespace KiwiClient.Classes
 {
     public class BaseVM : INotifyPropertyChanged
     {

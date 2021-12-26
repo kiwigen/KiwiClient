@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{DFDB99A9-3826-4B1C-9897-EEB7C7D2C114}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>LolAltClient</RootNamespace>
-    <AssemblyName>LolAltClient</AssemblyName>
+    <RootNamespace>KiwiClient</RootNamespace>
+    <AssemblyName>KiwiClient</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
