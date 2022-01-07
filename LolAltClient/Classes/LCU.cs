@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using PoniLCU;
 
@@ -113,8 +115,6 @@ namespace KiwiClient.Classes
                 {
                     AcceptCommand.Execute(LeagueClient);
                 }
-                else
-                    Activate(null, new EventArgs());
             }
         }
 
@@ -129,7 +129,7 @@ namespace KiwiClient.Classes
 
         private void SubscribeToClientEvents()
         {
-            LeagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", DecideQueue);
+            LeagueClient.Subscribe("/lol-matchmaking/v1/ready-check", DecideQueue);
             LeagueClient.Subscribe("/lol-gameflow/v1/gameflow-phase", GameFlowChanges);
         }
 
@@ -138,6 +138,7 @@ namespace KiwiClient.Classes
             LeagueClient.Unsubscribe("/lol-matchmaking/v1/ready-check", DecideQueue);
             LeagueClient.Unsubscribe("/lol-gameflow/v1/gameflow-phase", GameFlowChanges);
         }
+
 
     }
 

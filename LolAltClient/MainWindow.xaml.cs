@@ -1,44 +1,73 @@
 ﻿using KiwiClient.Classes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace KiwiClient
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window 
     {
-        
+
+
+        Hotkey _hotkey;
+
 
         public MainWindow()
         {
             InitializeComponent();
             LCU lcu = new LCU();
-            lcu.Activate += BringWindowToFront;
-            this.DataContext = lcu;            
+            this.DataContext = lcu;
         }
 
-
-        private void BringWindowToFront(object sender, EventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            Dispatcher.Invoke(() =>
-                {
-                    this.Activate();
-                });
+            _hotkey.HotkeyPressed -= HotkeyPressed;
+            _hotkey.Unregister();
+            base.OnClosing(e);  
+        }
 
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+        }
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            
+            base.OnSourceInitialized(e);
+            _hotkey = new Hotkey(this);
+            _hotkey.HotkeyPressed += HotkeyPressed;
+        }
+
+        private void HotkeyPressed(HotkeyEventArgs e)
+        {
+            Keys key = e.PressedKey;
+            switch (key)
+            {
+                case Keys.VK_CAPITAL:
+                    break;
+                case Keys.VK_RETURN:
+                    {
+                        if (this.DataContext is LCU lCU)
+                        {
+                            lCU.AcceptCommand.Execute(lCU.LeagueClient);
+                        }
+                        break;
+                    }
+                case Keys.VK_BACK:
+                    {
+                        if (this.DataContext is LCU lCU)
+                        {
+                            lCU.DeclineCommand.Execute(lCU.LeagueClient);
+                        }
+                        break;
+                    }
+                default:
+                    break;
+            }
         }
     }
 }

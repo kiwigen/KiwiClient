@@ -80,6 +80,7 @@
     <Compile Include="Classes\BaseVM.cs" />
     <Compile Include="Classes\Converter.cs" />
     <Compile Include="Classes\LCU.cs" />
+    <Compile Include="Classes\Hotkey.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
